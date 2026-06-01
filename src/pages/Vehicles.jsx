@@ -164,6 +164,7 @@ export default function Vehicles() {
   const [deleteLoading, setDeleteLoading]  = useState(false)
   const [search, setSearch]                = useState('')
   const [filterType, setFilterType]        = useState('semua')
+  const [showInactive, setShowInactive] = useState(true)
 
   // Ambil data kendaraan
   const { data, isLoading } = useQuery({
@@ -175,11 +176,12 @@ export default function Vehicles() {
 
   // Filter
   const filtered = vehicles.filter(v => {
-    const matchSearch =
-      v.vehicle_id.toLowerCase().includes(search.toLowerCase()) ||
-      v.plate_number.toLowerCase().includes(search.toLowerCase())
-    const matchType = filterType === 'semua' || v.vehicle_type === filterType
-    return matchSearch && matchType
+  const matchSearch =
+    v.vehicle_id.toLowerCase().includes(search.toLowerCase()) ||
+    v.plate_number.toLowerCase().includes(search.toLowerCase())
+  const matchType   = filterType === 'semua' || v.vehicle_type === filterType
+  const matchActive = showInactive ? true : v.is_active === true
+  return matchSearch && matchType && matchActive
   })
 
   // Tambah
