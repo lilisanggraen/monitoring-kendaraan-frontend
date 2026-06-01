@@ -6,14 +6,14 @@ export default function Layout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   return (
-    <div className="flex min-h-screen bg-gray-100">
+    <div className="flex h-screen overflow-hidden bg-gray-100">
       <Sidebar
         isOpen={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
       />
-      <div className="flex-1 flex flex-col overflow-auto">
+      <div className="flex-1 flex flex-col min-h-0">
         <Topbar onMenuClick={() => setSidebarOpen(true)} />
-        <main className="flex-1 overflow-auto">{children}</main>
+        <main className="flex-1 overflow-y-auto">{children}</main>
       </div>
     </div>
   )

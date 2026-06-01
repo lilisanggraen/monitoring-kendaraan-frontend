@@ -22,7 +22,7 @@ export default function Dashboard() {
   const { data: vehiclesRes } = useQuery({
     queryKey: ['vehicles'],
     queryFn: getVehicles,
-    refetchInterval: 10000 // refresh tiap 10 detik
+    refetchInterval: 10000
   })
 
   const { data: notifRes } = useQuery({
@@ -34,35 +34,31 @@ export default function Dashboard() {
   const vehicles      = vehiclesRes?.data?.data || []
   const notifications = notifRes?.data?.data || []
 
-  // Hitung kendaraan aktif (last_seen < 5 menit)
-  const now     = new Date()
-  const aktif   = vehicles.filter(v => {
+  const now    = new Date()
+  const aktif  = vehicles.filter(v => {
     if (!v.last_seen_at) return false
-    const diff = (now - new Date(v.last_seen_at)) / 1000 / 60
-    return diff < 5
+    return (now - new Date(v.last_seen_at)) / 1000 / 60 < 5
   })
-  const offline  = vehicles.filter(v => {
+  const offline = vehicles.filter(v => {
     if (!v.last_seen_at) return true
-    const diff = (now - new Date(v.last_seen_at)) / 1000 / 60
-    return diff >= 5
+    return (now - new Date(v.last_seen_at)) / 1000 / 60 >= 5
   })
-  const unread   = notifications.filter(n => !n.is_read)
+  const unread  = notifications.filter(n => !n.is_read)
 
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold text-gray-800 mb-6">Dashboard</h1>
 
-      {/* Stat Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        <StatCard icon={Car}    label="Total Kendaraan"  value={vehicles.length} color="bg-blue-500" />
-        <StatCard icon={Wifi}   label="Kendaraan Aktif"  value={aktif.length}    color="bg-green-500" />
-        <StatCard icon={WifiOff} label="Kendaraan Offline" value={offline.length} color="bg-red-500" />
-        <StatCard icon={Bell}   label="Notifikasi Baru"  value={unread.length}   color="bg-orange-500" />
+        <StatCard icon={Car}     label="Total Kendaraan"   value={vehicles.length} color="bg-blue-500" />
+        <StatCard icon={Wifi}    label="Kendaraan Online"  value={aktif.length}    color="bg-green-500" />
+        <StatCard icon={WifiOff} label="Kendaraan Offline" value={offline.length}  color="bg-red-500" />
+        <StatCard icon={Bell}    label="Notifikasi Baru"   value={unread.length}   color="bg-orange-500" />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Notifikasi Terbaru */}
-        <div className="bg-white rounded-xl shadow p-6">
+        <div className="bg-white rounded-xl shadow p-6 flex flex-col">
           <h2 className="font-bold text-gray-800 mb-4">Notifikasi Terbaru</h2>
           {notifications.slice(0, 5).length === 0 ? (
             <p className="text-gray-400 text-sm">Belum ada notifikasi.</p>
@@ -84,28 +80,36 @@ export default function Dashboard() {
           )}
         </div>
 
-        {/* Status Kendaraan */}
-        <div className="bg-white rounded-xl shadow p-6">
+        {/* Status Kendaraan - full box */}
+        <div className="bg-white rounded-xl shadow p-6 flex flex-col">
           <h2 className="font-bold text-gray-800 mb-4">Status Kendaraan</h2>
-          <div className="space-y-3 max-h-64 overflow-auto">
-            {vehicles.map(v => {
-              const isOnline = v.last_seen_at &&
-                (now - new Date(v.last_seen_at)) / 1000 / 60 < 5
-              return (
-                <div key={v.id} className="flex items-center justify-between py-2 border-b border-gray-100">
-                  <div>
-                    <p className="font-medium text-sm text-gray-800">{v.vehicle_id}</p>
-                    <p className="text-xs text-gray-400">{v.plate_number} · {v.vehicle_type}</p>
+          {vehicles.length === 0 ? (
+            <div className="flex-1 flex items-center justify-center">
+              <p className="text-gray-400 text-sm">Belum ada kendaraan terdaftar.</p>
+            </div>
+          ) : (
+            <div className="flex-1 overflow-y-auto divide-y divide-gray-100">
+              {vehicles.map(v => {
+                const isOnline = v.last_seen_at &&
+                  (now - new Date(v.last_seen_at)) / 1000 / 60 < 5
+                return (
+                  <div key={v.id} className="flex items-center justify-between py-3">
+                    <div>
+                      <p className="font-medium text-sm text-gray-800">{v.vehicle_id}</p>
+                      <p className="text-xs text-gray-400">{v.plate_number} · {v.vehicle_type}</p>
+                    </div>
+                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                      isOnline
+                        ? 'bg-green-100 text-green-700'
+                        : 'bg-gray-100 text-gray-500'
+                    }`}>
+                      {isOnline ? '● Online' : '○ Offline'}
+                    </span>
                   </div>
-                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                    isOnline ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'
-                  }`}>
-                    {isOnline ? '● Online' : '○ Offline'}
-                  </span>
-                </div>
-              )
-            })}
-          </div>
+                )
+              })}
+            </div>
+          )}
         </div>
       </div>
     </div>
