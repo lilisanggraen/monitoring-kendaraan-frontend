@@ -13,6 +13,7 @@ import Notifications from './pages/Notifications'
 import Vehicles      from './pages/Vehicles'
 import Geofences     from './pages/Geofences'
 import Statistics    from './pages/Statistics'
+import Settings      from './pages/Settings'
 
 const queryClient = new QueryClient()
 
@@ -56,6 +57,11 @@ export default function App() {
           <Route path="/statistics" element={
             <ProtectedRoute>
               <Layout><Statistics /></Layout>
+            </ProtectedRoute>
+          } />
+          <Route path="/settings" element={
+            <ProtectedRoute>
+              <Layout><Settings /></Layout>
             </ProtectedRoute>
           } />
         </Routes>

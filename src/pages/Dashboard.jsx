@@ -31,8 +31,8 @@ export default function Dashboard() {
     refetchInterval: 10000
   })
 
-  const vehicles      = vehiclesRes?.data?.data || []
-  const notifications = notifRes?.data?.data || []
+const vehicles = vehiclesRes?.data?.data || vehiclesRes?.data || []
+const notifications = notifRes?.data?.data || notifRes?.data || []
 
   const now    = new Date()
   const aktif  = vehicles.filter(v => {

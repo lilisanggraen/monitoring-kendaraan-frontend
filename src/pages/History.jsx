@@ -36,7 +36,6 @@ export default function History() {
     }
   }
 
-  // Konversi logs ke format koordinat Leaflet
   const polylinePoints = logs.map(l => [l.latitude, l.longitude])
 
   return (
@@ -61,7 +60,6 @@ export default function History() {
               ))}
             </select>
           </div>
-
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Tanggal Mulai</label>
             <input
@@ -71,7 +69,6 @@ export default function History() {
               className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
-
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Tanggal Selesai</label>
             <input
@@ -81,7 +78,6 @@ export default function History() {
               className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
-
           <div className="flex items-end">
             <button
               onClick={handleSearch}
@@ -105,13 +101,9 @@ export default function History() {
             attribution='&copy; OpenStreetMap contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
-
-          {/* Polyline rute */}
           {polylinePoints.length > 0 && (
             <Polyline positions={polylinePoints} color="blue" weight={3} opacity={0.8} />
           )}
-
-          {/* Titik awal (hijau) */}
           {logs.length > 0 && (
             <CircleMarker
               center={[logs[0].latitude, logs[0].longitude]}
@@ -120,8 +112,6 @@ export default function History() {
               <Popup>Titik Awal — {new Date(logs[0].recorded_at).toLocaleString('id-ID')}</Popup>
             </CircleMarker>
           )}
-
-          {/* Titik akhir (merah) */}
           {logs.length > 1 && (
             <CircleMarker
               center={[logs[logs.length-1].latitude, logs[logs.length-1].longitude]}
@@ -146,7 +136,6 @@ export default function History() {
                   <th className="px-4 py-3 text-left text-gray-600">Waktu</th>
                   <th className="px-4 py-3 text-left text-gray-600">Latitude</th>
                   <th className="px-4 py-3 text-left text-gray-600">Longitude</th>
-                  <th className="px-4 py-3 text-left text-gray-600">Kecepatan</th>
                 </tr>
               </thead>
               <tbody>
@@ -157,7 +146,6 @@ export default function History() {
                     </td>
                     <td className="px-4 py-2 text-gray-600">{log.latitude.toFixed(6)}</td>
                     <td className="px-4 py-2 text-gray-600">{log.longitude.toFixed(6)}</td>
-                    <td className="px-4 py-2 text-gray-600">{log.speed} km/h</td>
                   </tr>
                 ))}
               </tbody>

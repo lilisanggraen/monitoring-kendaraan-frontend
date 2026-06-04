@@ -1,3 +1,9 @@
+export const getProfile = () => api.get('/api/auth/profile')
+export const updateProfile = (data) => api.patch('/api/auth/profile', data)
+export const changePassword = (data) => api.patch('/api/auth/change-password', data)
+export const uploadAvatar = (formData) => api.post('/api/auth/avatar', formData, {
+  headers: { 'Content-Type': 'multipart/form-data' }
+})
 import axios from 'axios'
 
 const api = axios.create({

@@ -1,7 +1,7 @@
 import { NavLink } from 'react-router-dom'
 import {
   LayoutDashboard, Map, History, Bell,
-  Car, Shield, BarChart2, LogOut, X, User
+  Car, Shield, BarChart2, LogOut, X, User, Settings
 } from 'lucide-react'
 import { useState } from 'react'
 import useAuthStore from '../../stores/authStore'
@@ -14,6 +14,7 @@ const menus = [
   { path: '/vehicles',      icon: Car,             label: 'Kendaraan' },
   { path: '/geofences',     icon: Shield,          label: 'Geofence' },
   { path: '/statistics',    icon: BarChart2,       label: 'Statistik' },
+  { path: '/settings',      icon: Settings,        label: 'Pengaturan' },
 ]
 
 export default function Sidebar({ isOpen, onClose }) {
@@ -76,7 +77,6 @@ export default function Sidebar({ isOpen, onClose }) {
 
         {/* User Profile */}
         <div className="p-4 border-t border-blue-800 shrink-0">
-          {/* Tombol profile - bisa diklik */}
           <button
             onClick={() => setShowProfile(!showProfile)}
             className="flex items-center gap-3 w-full mb-2 hover:bg-blue-800 rounded-lg p-2 transition-colors"
